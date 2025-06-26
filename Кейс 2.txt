@@ -1,0 +1,99 @@
+// Запрашиваем данные у пользователя (в реальной среде можно использовать prompt)
+// Для примера зададим значения напрямую
+let day = 15;   // День рождения
+let month = 3;  // Месяц (1-12)
+let year = 1990; // Год
+
+// Функция для определения дня недели
+function getDayOfWeek(day, month, year) {
+    // Корректируем месяц, так как в JavaScript месяцы считаются с 0
+    const date = new Date(year, month - 1, day);
+    const days = [
+        "Воскресенье",
+        "Понедельник",
+        "Вторник",
+        "Среда",
+        "Четверг",
+        "Пятница",
+        "Суббота"
+    ];
+    return days[date.getDay()];
+}
+
+// Функция для проверки високосного года
+function isLeapYear(year) {
+    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+}
+
+// Функция для подсчета возраста
+function calculateAge(day, month, year) {
+    const today = new Date(); // Текущая дата (15 марта 2025 по условию)
+    const birthDate = new Date(year, month - 1, day);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    // Корректировка возраста, если день рождения еще не наступил в этом году
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+// Функция для отображения цифр звездочками
+function drawNumberWithStars(number) {
+    // Определяем шаблоны для цифр 0-9 в виде звездочек
+    const digitPatterns = [
+        // 0
+        [" *** ", "*   *", "*   *", "*   *", " *** "],
+        // 1
+        ["  *  ", "  *  ", "  *  ", "  *  ", "  *  "],
+        // 2
+        [" *** ", "    *", " *** ", "*    ", " *** "],
+        // 3
+        [" *** ", "    *", " *** ", "    *", " *** "],
+        // 4
+        ["*   *", "*   *", " *** ", "    *", "    *"],
+        // 5
+        [" *** ", "*    ", " *** ", "    *", " *** "],
+        // 6
+        [" *** ", "*    ", " *** ", "*   *", " *** "],
+        // 7
+        [" *** ", "    *", "    *", "    *", "    *"],
+        // 8
+        [" *** ", "*   *", " *** ", "*   *", " *** "],
+        // 9
+        [" *** ", "*   *", " *** ", "    *", " *** "]
+    ];
+
+    // Преобразуем число в строку и дополняем нули слева, если нужно
+    const numStr = number.toString().padStart(2, "0");
+    let result = ["", "", "", "", ""];
+
+    // Для каждой цифры в числе
+    for (let i = 0; i < numStr.length; i++) {
+        const digit = parseInt(numStr[i]);
+        for (let row = 0; row < 5; row++) {
+            result[row] += digitPatterns[digit][row] + " ";
+        }
+    }
+    return result;
+}
+
+// Форматируем дату рождения в звездочках
+function displayDateInStars(day, month, year) {
+    const dayStars = drawNumberWithStars(day);
+    const monthStars = drawNumberWithStars(month);
+    const yearStars = drawNumberWithStars(year.slice(-2)); // Берем последние 2 цифры года
+
+    console.log("Дата рождения в формате звездочек (дд мм гг):");
+    for (let i = 0; i < 5; i++) {
+        console.log(`${dayStars[i]}  ${monthStars[i]}  ${yearStars[i]}`);
+    }
+}
+
+// Вывод результатов
+console.log(`Дата рождения: ${day}.${month}.${year}`);
+console.log(`День недели: ${getDayOfWeek(day, month, year)}`);
+console.log(`Високосный год: ${isLeapYear(year) ? "Да" : "Нет"}`);
+console.log(`Возраст: ${calculateAge(day, month, year)} лет`);
+displayDateInStars(day, month, year);

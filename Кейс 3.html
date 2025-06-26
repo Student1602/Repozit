@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Слайдер изображений</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .slider-container {
+            width: 500px;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .slider img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .image-counter {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider">
+            <img id="slider-image" src="https://media.istockphoto.com/id/1985570589/uk/%D1%84%D0%BE%D1%82%D0%BE/%D1%96%D0%BC%D1%96%D1%82%D0%B0%D1%86%D1%96%D1%8F-%D0%B3%D0%B0%D0%B2%D0%B0%D0%B9%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D1%80%D1%83%D0%BB%D0%B5%D1%82%D1%83-%D0%B7-%D1%81%D0%B8%D1%80%D0%BE%D0%BC-%D0%B3%D0%B0%D0%BC%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80%D0%B8.jpg?s=2048x2048&w=is&k=20&c=rkBQDlyBbTatlCu6GxtyTcgxiIQo8hC86Bq_2vGpZG0=" alt="Слайд 1">
+        </div>
+        <div class="image-counter" id="image-counter">Изображение 1 из 5</div>
+        <div class="controls">
+            <button id="prev">Назад</button>
+            <button id="next">Вперед</button>
+        </div>
+    </div>
+
+    <script>
+        const images = [
+            "https://media.istockphoto.com/id/1985570589/uk/%D1%84%D0%BE%D1%82%D0%BE/%D1%96%D0%BC%D1%96%D1%82%D0%B0%D1%86%D1%96%D1%8F-%D0%B3%D0%B0%D0%B2%D0%B0%D0%B9%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D1%80%D1%83%D0%BB%D0%B5%D1%82%D1%83-%D0%B7-%D1%81%D0%B8%D1%80%D0%BE%D0%BC-%D0%B3%D0%B0%D0%BC%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80%D0%B8.jpg?s=2048x2048&w=is&k=20&c=rkBQDlyBbTatlCu6GxtyTcgxiIQo8hC86Bq_2vGpZG0=",
+            "https://media.istockphoto.com/id/2038381863/uk/%D1%84%D0%BE%D1%82%D0%BE/%D0%BA%D0%BE%D0%BF%D1%96%D1%8F-%D0%B3%D0%B0%D0%B2%D0%B0%D0%B9%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE-%D1%80%D1%83%D0%BB%D0%B5%D1%82%D1%83-%D1%87%D1%96%D0%B7%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80-%D1%81%D0%BB%D0%B0%D0%B9%D0%B4%D0%B5%D1%80%D0%B8.jpg?s=2048x2048&w=is&k=20&c=jVm0lRxhm1znFsuNpeZFgV9EXXKxVqdwVx6-XQwOZjw=",
+            "https://media.istockphoto.com/id/1422808833/uk/%D1%84%D0%BE%D1%82%D0%BE/%D0%BA%D1%96%D0%BB%D1%8C%D1%86%D0%B5-%D0%BF%D0%BE%D0%B2%D0%B7%D1%83%D0%BD%D0%BA%D0%B0-%D0%BA%D1%83%D1%80%D0%BA%D0%B8-%D0%B1%D0%B0%D1%80%D0%B1%D0%B5%D0%BA%D1%8E.jpg?s=2048x2048&w=is&k=20&c=w7_0epWuI0dcAIkL8EaijsvMKwdstwjvyePOA724hSE=",
+            "https://media.istockphoto.com/id/866619054/uk/%D1%84%D0%BE%D1%82%D0%BE/%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D1%96-%D0%BC%D1%96%D0%BD%D1%96-%D1%8F%D0%BB%D0%BE%D0%B2%D0%B8%D1%87%D1%96-%D0%B3%D0%B0%D0%BC%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80%D0%B8-%D0%B7-%D1%81%D0%B0%D0%BB%D0%B0%D1%82%D0%BE%D0%BC-coleslaw-%D0%BD%D0%B0-%D0%BC%D0%B0%D0%BB%D0%B5%D0%BD%D1%8C%D0%BA%D1%96%D0%B9-%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D1%8F%D0%BD%D1%96%D0%B9-%D0%BE%D0%B1%D1%80%D0%BE%D0%B1%D0%BD%D1%96%D0%B9-%D0%B4%D0%BE%D1%88%D1%86%D1%96.jpg?s=2048x2048&w=is&k=20&c=036weaI7c8jsIrDj939qDa2PZFdVX_YJR4mGvw9sqzA=",
+            "https://media.istockphoto.com/id/1178580274/uk/%D1%84%D0%BE%D1%82%D0%BE/%D0%B6%D1%96%D0%BD%D0%BA%D0%B0-%D1%82%D1%80%D0%B8%D0%BC%D0%B0%D1%94-%D1%81%D0%B2%D1%96%D0%B6%D0%B8%D0%B9-%D0%B3%D0%B0%D0%BC%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80-%D0%BF%D0%B5%D1%80%D0%B5%D0%B4-%D1%97%D0%B6%D0%B5%D1%8E.jpg?s=2048x2048&w=is&k=20&c=oHCOFSmaI9bRDfDJsHjYNxZx3JAEB7j3Fcko_Cd9m-s="
+        ];
+
+        let currentIndex = 0;
+        const sliderImage = document.getElementById("slider-image");
+        const imageCounter = document.getElementById("image-counter");
+        const prevButton = document.getElementById("prev");
+        const nextButton = document.getElementById("next");
+
+        function updateSlider() {
+            sliderImage.src = images[currentIndex];
+            imageCounter.textContent = `Изображение ${currentIndex + 1} из ${images.length}`;
+        }
+
+        prevButton.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateSlider();
+        });
+
+        nextButton.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateSlider();
+        });
+    </script>
+</body>
+</html>
